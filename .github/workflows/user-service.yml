@@ -1,12 +1,14 @@
-name: Build and Push
+name: user-service — Build and Push
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'user-service/**'
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: rkamradt/user-service
 
 jobs:
   build-and-push:
@@ -33,7 +35,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./user-service
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
 

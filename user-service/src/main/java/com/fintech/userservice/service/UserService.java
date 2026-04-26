@@ -9,7 +9,6 @@ import com.fintech.userservice.model.User;
 import com.fintech.userservice.model.UserRole;
 import com.fintech.userservice.repository.UserRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,14 +20,10 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserEventProducer eventProducer;
 
-    public UserService(UserRepository userRepository,
-                       PasswordEncoder passwordEncoder,
-                       UserEventProducer eventProducer) {
+    public UserService(UserRepository userRepository, UserEventProducer eventProducer) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.eventProducer = eventProducer;
     }
 
@@ -38,7 +33,6 @@ public class UserService {
         }
         User user = new User();
         user.setUsername(req.getUsername());
-        user.setPasswordHash(passwordEncoder.encode(req.getPassword()));
         user.setRole(req.getRole());
         user.setCreatedBy(createdBy);
         user.setFirstName(req.getFirstName());

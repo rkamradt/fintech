@@ -5,7 +5,6 @@ import com.fintech.userservice.model.UserStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
@@ -15,7 +14,6 @@ public class UserEventProducer {
     private static final String TOPIC_USER_CREATED = "user.created";
     private static final String TOPIC_ROLE_CHANGED = "user.role.changed";
     private static final String TOPIC_STATUS_CHANGED = "user.status.changed";
-    private static final String TOPIC_AUTHENTICATED = "user.authenticated";
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -56,14 +54,5 @@ public class UserEventProducer {
                 "changedBy", changedBy
         );
         kafkaTemplate.send(TOPIC_STATUS_CHANGED, userId.toString(), event);
-    }
-
-    public void publishUserAuthenticated(UUID userId, UserRole role) {
-        Map<String, Object> event = Map.of(
-                "userId", userId.toString(),
-                "role", role.name(),
-                "loginTimestamp", Instant.now().toString()
-        );
-        kafkaTemplate.send(TOPIC_AUTHENTICATED, userId.toString(), event);
     }
 }

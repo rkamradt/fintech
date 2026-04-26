@@ -148,16 +148,6 @@
           "description": "Activate/deactivate user account - manager only"
         },
         {
-          "method": "POST",
-          "path": "/auth/login",
-          "description": "Authenticate user and return JWT token with role claims"
-        },
-        {
-          "method": "POST",
-          "path": "/auth/validate",
-          "description": "Validate JWT token and return user context for other services"
-        },
-        {
           "method": "GET",
           "path": "/users/tellers",
           "description": "List all teller users for manager oversight"
@@ -183,11 +173,6 @@
           "direction": "produces",
           "topic": "user.status.changed",
           "description": "Published when user is activated/deactivated with userId, newStatus, changedBy"
-        },
-        {
-          "direction": "produces",
-          "topic": "user.authenticated",
-          "description": "Published on successful login with userId, role, loginTimestamp for audit trails"
         }
       ],
       "dependencies": []
