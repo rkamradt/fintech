@@ -1,0 +1,16 @@
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/service/AccountService.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/kafka/event/AccountCreatedEvent.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/kafka/TransactionCompletedConsumer.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/kafka/event/AccountStatusChangedEvent.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/kafka/AccountEventProducer.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/dto/UpdateBalanceRequest.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/kafka/event/AccountBalanceUpdatedEvent.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/model/AccountType.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/model/AccountStatus.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/kafka/event/TransactionCompletedEvent.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/AccountServiceApplication.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/dto/CreateAccountRequest.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/controller/AccountController.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/dto/UpdateStatusRequest.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/model/Account.java
+/Users/randalkamradt/github/fintech/account-service/src/main/java/com/fintech/accountservice/repository/AccountRepository.java

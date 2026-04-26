@@ -1,0 +1,197 @@
+{
+  "project": "New Ecosystem",
+  "generated": "2026-04-25T22:12:30.035Z",
+  "services": [
+    {
+      "id": "account-service",
+      "name": "AccountService",
+      "purpose": "Owns account lifecycle, account types, balance management, and account status for all financial accounts in the system",
+      "tech": "Spring Boot",
+      "apis": [
+        {
+          "method": "POST",
+          "path": "/accounts",
+          "description": "Create new account with specified type (checking, savings, etc.) for a customer"
+        },
+        {
+          "method": "GET",
+          "path": "/accounts/{accountId}",
+          "description": "Get account details including current balance and status"
+        },
+        {
+          "method": "GET",
+          "path": "/accounts/customer/{customerId}",
+          "description": "List all accounts owned by a specific customer"
+        },
+        {
+          "method": "PUT",
+          "path": "/accounts/{accountId}/status",
+          "description": "Update account status (active, suspended, closed) - manager only"
+        },
+        {
+          "method": "PUT",
+          "path": "/accounts/{accountId}/balance",
+          "description": "Update account balance after transaction processing"
+        }
+      ],
+      "events": [
+        {
+          "direction": "produces",
+          "topic": "account.created",
+          "description": "Published when new account is created with accountId, customerId, accountType, initialBalance"
+        },
+        {
+          "direction": "produces",
+          "topic": "account.balance.updated",
+          "description": "Published when account balance changes with accountId, newBalance, previousBalance, transactionId"
+        },
+        {
+          "direction": "produces",
+          "topic": "account.status.changed",
+          "description": "Published when account status changes with accountId, newStatus, previousStatus, authorizedBy"
+        },
+        {
+          "direction": "consumes",
+          "topic": "transaction.completed",
+          "description": "Listens for completed transactions to update account balances accordingly"
+        }
+      ],
+      "dependencies": []
+    },
+    {
+      "id": "transaction-service",
+      "name": "TransactionService",
+      "purpose": "Owns all money movement operations, transaction history, and audit trails with authenticated user context",
+      "tech": "Spring Boot",
+      "apis": [
+        {
+          "method": "POST",
+          "path": "/transactions/deposit",
+          "description": "Deposit money to account - requires teller+ role, captures authenticated user and optional customer ID"
+        },
+        {
+          "method": "POST",
+          "path": "/transactions/withdraw",
+          "description": "Withdraw money from account - requires teller+ role, captures authenticated user and optional customer ID"
+        },
+        {
+          "method": "POST",
+          "path": "/transactions/transfer",
+          "description": "Transfer money between accounts - requires teller+ role, captures authenticated user"
+        },
+        {
+          "method": "GET",
+          "path": "/transactions/account/{accountId}",
+          "description": "Get transaction history for account - customer sees own, teller+ sees any"
+        },
+        {
+          "method": "GET",
+          "path": "/transactions/{transactionId}",
+          "description": "Get specific transaction details including audit trail"
+        },
+        {
+          "method": "GET",
+          "path": "/transactions/user/{userId}",
+          "description": "Get all transactions performed by a specific user - manager only"
+        }
+      ],
+      "events": [
+        {
+          "direction": "produces",
+          "topic": "transaction.initiated",
+          "description": "Published when transaction starts with transactionId, accountId, amount, type, authenticatedUserId, customerIdOnBehalf"
+        },
+        {
+          "direction": "produces",
+          "topic": "transaction.completed",
+          "description": "Published when transaction completes successfully with transactionId, accountId, amount, newBalance, authenticatedUserId"
+        },
+        {
+          "direction": "produces",
+          "topic": "transaction.failed",
+          "description": "Published when transaction fails with transactionId, accountId, amount, reason, authenticatedUserId"
+        },
+        {
+          "direction": "consumes",
+          "topic": "account.balance.updated",
+          "description": "Listens to confirm balance updates were applied successfully"
+        }
+      ],
+      "dependencies": [
+        "account-service"
+      ]
+    },
+    {
+      "id": "user-service",
+      "name": "UserService",
+      "purpose": "Owns user identity, authentication, role assignments, and user lifecycle management for the banking system",
+      "tech": "Spring Boot",
+      "apis": [
+        {
+          "method": "POST",
+          "path": "/users",
+          "description": "Create new user with specified role (customer, teller, manager) - manager only"
+        },
+        {
+          "method": "GET",
+          "path": "/users/{userId}",
+          "description": "Get user profile and role information"
+        },
+        {
+          "method": "PUT",
+          "path": "/users/{userId}/role",
+          "description": "Update user role assignment - manager only"
+        },
+        {
+          "method": "PUT",
+          "path": "/users/{userId}/status",
+          "description": "Activate/deactivate user account - manager only"
+        },
+        {
+          "method": "POST",
+          "path": "/auth/login",
+          "description": "Authenticate user and return JWT token with role claims"
+        },
+        {
+          "method": "POST",
+          "path": "/auth/validate",
+          "description": "Validate JWT token and return user context for other services"
+        },
+        {
+          "method": "GET",
+          "path": "/users/tellers",
+          "description": "List all teller users for manager oversight"
+        },
+        {
+          "method": "GET",
+          "path": "/users/customers",
+          "description": "List all customer users - teller+ role required"
+        }
+      ],
+      "events": [
+        {
+          "direction": "produces",
+          "topic": "user.created",
+          "description": "Published when new user is created with userId, role, createdBy, customerProfile if applicable"
+        },
+        {
+          "direction": "produces",
+          "topic": "user.role.changed",
+          "description": "Published when user role is updated with userId, newRole, previousRole, changedBy"
+        },
+        {
+          "direction": "produces",
+          "topic": "user.status.changed",
+          "description": "Published when user is activated/deactivated with userId, newStatus, changedBy"
+        },
+        {
+          "direction": "produces",
+          "topic": "user.authenticated",
+          "description": "Published on successful login with userId, role, loginTimestamp for audit trails"
+        }
+      ],
+      "dependencies": []
+    }
+  ]
+}
+

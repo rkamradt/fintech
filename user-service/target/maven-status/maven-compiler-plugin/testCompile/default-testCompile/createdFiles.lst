@@ -1,0 +1,3 @@
+com/fintech/userservice/UserServiceApplicationTests.class
+com/fintech/userservice/controller/UserControllerTest.class
+com/fintech/userservice/controller/AuthControllerTest.class
