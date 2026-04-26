@@ -19,6 +19,6 @@ USER spring:spring
 
 EXPOSE 8082
 
-ENV JAVA_OPTS="-Xmx512m -Xms256m"
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0"
 
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
