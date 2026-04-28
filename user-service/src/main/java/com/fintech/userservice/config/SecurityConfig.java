@@ -27,6 +27,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         // Manager-only
                         .requestMatchers(HttpMethod.POST, "/users").hasRole("MANAGER")
