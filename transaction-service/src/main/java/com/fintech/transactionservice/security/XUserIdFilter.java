@@ -18,13 +18,13 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class XUserIdFilter extends OncePerRequestFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(XUserIdFilter.class);
 
     private final UserServiceClient userServiceClient;
 
-    public JwtAuthenticationFilter(UserServiceClient userServiceClient) {
+    public XUserIdFilter(UserServiceClient userServiceClient) {
         this.userServiceClient = userServiceClient;
     }
 
@@ -32,11 +32,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
+        String userId = request.getHeader("X-User-ID");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+        if (userId != null && !userId.isBlank()) {
             try {
-                UserContext ctx = userServiceClient.validateToken(authHeader);
+                UserContext ctx = userServiceClient.getUser(userId);
                 if (ctx != null) {
                     String role = "ROLE_" + ctx.role().toUpperCase();
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (Exception e) {
-                log.warn("Token validation failed: {}", e.getMessage());
+                log.warn("User lookup failed for X-User-ID {}: {}", userId, e.getMessage());
                 SecurityContextHolder.clearContext();
             }
         }

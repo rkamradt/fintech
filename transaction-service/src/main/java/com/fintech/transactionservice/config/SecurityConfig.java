@@ -1,6 +1,6 @@
 package com.fintech.transactionservice.config;
 
-import com.fintech.transactionservice.security.JwtAuthenticationFilter;
+import com.fintech.transactionservice.security.XUserIdFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,10 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final XUserIdFilter xUserIdFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    public SecurityConfig(XUserIdFilter xUserIdFilter) {
+        this.xUserIdFilter = xUserIdFilter;
     }
 
     @Bean
@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions(fo -> fo.disable()))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(xUserIdFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

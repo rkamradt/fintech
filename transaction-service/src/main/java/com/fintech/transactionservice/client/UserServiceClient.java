@@ -1,12 +1,11 @@
 package com.fintech.transactionservice.client;
 
 import com.fintech.transactionservice.dto.UserContext;
+import com.fintech.transactionservice.client.UserServiceResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
 
 @Component
 public class UserServiceClient {
@@ -20,22 +19,15 @@ public class UserServiceClient {
         this.userServiceUrl = userServiceUrl;
     }
 
-    public UserContext validateToken(String bearerToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", bearerToken);
-
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(
-                Map.of("token", bearerToken.replace("Bearer ", "")),
-                headers
+    public UserContext getUser(String userId) {
+        ResponseEntity<UserServiceResponse> response = restTemplate.exchange(
+                userServiceUrl + "/users/" + userId,
+                HttpMethod.GET,
+                null,
+                UserServiceResponse.class
         );
-
-        ResponseEntity<UserContext> response = restTemplate.exchange(
-                userServiceUrl + "/auth/validate",
-                HttpMethod.POST,
-                request,
-                UserContext.class
-        );
-        return response.getBody();
+        UserServiceResponse body = response.getBody();
+        if (body == null) return null;
+        return new UserContext(body.id(), body.role());
     }
 }
