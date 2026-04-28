@@ -29,6 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
+                        // Internal service-to-service lookup (no user context)
+                        .requestMatchers(HttpMethod.GET, "/users/{userId}").permitAll()
                         // Manager-only
                         .requestMatchers(HttpMethod.POST, "/users").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.PUT, "/users/*/role").hasRole("MANAGER")
